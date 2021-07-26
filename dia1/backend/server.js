@@ -63,26 +63,35 @@ app.post('/produtos', (req, res) => {
 })
 
 app.put('/produtos/:codigo', (req, res) =>{
-    var resource =listaProdutos.filter(x => x.codigo == req.params.codigo);
+    var resource = listaProdutos.filter(x => x.codigo == req.params.codigo);
     var newObj = req.body;
 
-    if (resource.length)
+    if (resource.length == 0) {
+        res.statusCode = 404
+        res.send("NOK");
+    }
+    else {
+        var elementoAtual = resource[0];
+
+
+        if (elementoAtual.codigo != newObj.codigo) {
+            var existsNew = listaProdutos.filter(x => x.codigo == newObj.codigo);
+            if (existsNew.length > 0) {
+                res.statusCode = 409
+                res.send("NOK");
+            }else{
+                elementoAtual.codigo = newObj.codigo;
+                elementoAtual.quantidade = newObj.quantidade;
+            
+                elementoAtual.descricao = newObj.descricao;
+            }   
+        }
+
+        
+        res.send("OK");
+
+    }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.listen(port, () => {
     initMemDB();
