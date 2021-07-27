@@ -1,100 +1,95 @@
 const express = require('express')
+const { Pool } = require('pg')
 const app = express()
 app.use(express.json());
 const port = 3000
 
+const pool = new Pool({
+    connectionString: "postgres://postgres:Discovoador8@localhost:5432/loja"
+});
 
-var listaProdutos = [];
+pool.on('connect', () => {
+    console.log("Base de dados conectada com sucesso")
+})
 
-function initMemDB(){
-    
-    listaProdutos.push({codigo: 1, quantidade: 10, descricao: 'caneta'});
-    listaProdutos.push({codigo: 2, quantidade: 20, descricao: 'boracha'});
-    listaProdutos.push({codigo: 3, quantidade: 5, descricao: 'caderno'});
-
-}
-
+//hello world
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/produtos', (req, res) => {
-    res.send(listaProdutos);
+// Retorna todos os produtos
+app.get('/produtos', async (req, res) => {
+    const result = await pool.query("SELECT codigo, descricao, quantidade  FROM produtos")
+    
+    res.status(200).send(result.rows);
 })
 
-app.get('/produtos/:codigo', (req, res) => {
-    var result = listaProdutos.filter(x=> x.codigo == req.params.codigo);
-
-    if (result.length == 0){
-        res.statuscode = 404
+// Retorna o produto com o codigo
+app.get('/produtos/:codigo', async (req, res) => {
+    const result = await pool.query("SELECT codigo, descricao, quantidade FROM produtos WHERE codigo=$1",[req.params.codigo]);
+    if (result.rowCount == 0){
+        res.statusCode = 404
         res.send("404")
-    }
-    else
-        res.send(result[0]);
+    }else
+        res.status(200).send(result.rows);
 })
 
-app.delete('/produtos/:codigo', (req, res) => {
-    
-    var result = listaProdutos.filter(x=> x.codigo != req.params.codigo);
-    
-    if (result.length == listaProdutos.length){
-        res.statuscode = 404
+//DELETA produtos com o codigo
+app.delete('/produtos/:codigo', async (req, res) => {
+    const result = await pool.query("DELETE FROM produtos WHERE codigo=$1",[req.params.codigo]);
+
+    if (result.rowCount == 0){
+        res.statusCode = 404
         res.send("NOK")
     }
     else{
-        listaProdutos = result;
-        res.send("OK")
+        res.status(200).send("OK");
     }
 })
 
-app.post('/produtos', (req, res) => {
+// Atualiza um item do cadastro
+app.post('/produtos', async (req, res) => {
     var newObj = req.body;
-    var sameCodigo = listaProdutos.filter(x => x.codigo == newObj.codigo);
-    if (sameCodigo.length >0 ) {
-
-        res.statusCode = 409;
-        res.send("NOK");
+    //var sameCodigo = listaProdutos.filter(x => x.codigo == newObj.codigo);
+    //insert into produtos(codigo,descricao,quantidade) values (4, 'teste', 2)
+    const sameCodigo = await pool.query("SELECT codigo FROM produtos WHERE codigo = $1",[newObj.codigo]);
+    if (sameCodigo.rowCount > 0 ) {
+            res.statusCode = 409;
+            res.send("NOK");
     }else{
-
-        listaProdutos.push(newObj);
+        const result = await pool.query("INSERT INTO produtos (codigo, descricao, quantidade) VALUES($1,$2,$3)",
+        [newObj.codigo, newObj.descricao, newObj.quantidade]);
         res.statusCode = 201;
         res.send(newObj);
     }
 })
 
-app.put('/produtos/:codigo', (req, res) =>{
-    var resource = listaProdutos.filter(x => x.codigo == req.params.codigo);
+app.put('/produtos/:codigo', async (req, res) => {
+    const resource = await pool.query("SELECT codigo, descricao, quantidade FROM produtos WHERE codigo = $1", [req.params.codigo]);
     var newObj = req.body;
 
-    if (resource.length == 0) {
+    if (resource.rowCount == 0) {
         res.statusCode = 404
-        res.send("NOK");
+        res.send("NOK"); 
     }
     else {
-        var elementoAtual = resource[0];
-
-
+        var elementoAtual = resource.rows[0]; 
         if (elementoAtual.codigo != newObj.codigo) {
-            var existsNew = listaProdutos.filter(x => x.codigo == newObj.codigo);
-            if (existsNew.length > 0) {
+            var existsNew = await pool.query("SELECT codigo, descricao, quantidade FROM produtos WHERE codigo = $1", [newObj.codigo]);
+            if (result.rowCount > 0) {
                 res.statusCode = 409
                 res.send("NOK");
-            }else{
-                elementoAtual.codigo = newObj.codigo;
-                elementoAtual.quantidade = newObj.quantidade;
-            
-                elementoAtual.descricao = newObj.descricao;
-            }   
-        }
+                return;
+            } 
+        } 
 
-        
+        const updated = await pool.query("UPDATE produtos SET codigo = $1, descricao = $2, quantidade = $3 WHERE codigo = $4", [newObj.codigo, newObj.descricao, newObj.quantidade, req.params.codigo]);
         res.send("OK");
-
     }
 })
 
+//
 app.listen(port, () => {
-    initMemDB();
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
