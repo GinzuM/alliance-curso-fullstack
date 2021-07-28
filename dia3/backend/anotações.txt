@@ -1,0 +1,51 @@
+
+comandos do adm do server
+
+insert into produtos(codigo,descricao,quantidade) values (4, 'teste', 2)
+update produtos set descricao= 'nova descricao'
+select * from produtos                
+delete from produtos
+
+                    (filtros)      (adicionar elementos ao filtros)
+                        where codigo=3 and quantidade<10
+
+
+                    (ordem que a lista vai mostrar)    
+select from produtos order by 
+
+
+
+{"codigo": 6,"descricao": "teste 3","quantidade": 20}
+
+
+
+tipos primitivos
+integer, string, bool
+var i=10, nome = "diego"
+
+
+
+
+tipos de arrays(listas)
+var lista = ["banana", "maca", "amora"]
+
+
+
+tipos dicionario
+var usuario = {
+    codigo: 10,
+    nome: "diego,
+    email: "dyegro@gmail.com"
+}
+
+
+
+where codigo=$1 and nome=$2
+
+
+mudar arrays obj para valor
+var newObj = Object.values(req.body);
+
+
+
+
