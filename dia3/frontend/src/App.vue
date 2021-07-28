@@ -6,7 +6,7 @@
 
 <script>
 //import HelloWorld from './components/HelloWorld.vue'
-import ListaProdutos from './ListaProdutos.vue'
+import ListaProdutos from './components/ListaProdutos.vue'
 
 export default {
   name: 'App',
