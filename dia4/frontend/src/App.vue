@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    <ListaProdutos />
+    <ListaClientes />
   </div>
 </template>
 
 <script>
-import ListaProdutos from './components/ListaProdutos.vue'
+import ListaClientes from './components/ListaClientes.vue'
 //import HelloWorld from './components/HelloWorld.vue'
 
 
 export default {
   name: 'App',
   components: {
-    ListaProdutos
+    ListaClientes
   }
 }
 </script>

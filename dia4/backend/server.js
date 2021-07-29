@@ -10,7 +10,7 @@ app.use(express.json());
 const port = 3000
 
 const pool = new Pool({
-    connectionString: "postgres://postgres:Discovoador8@localhost:5432/loja"
+    connectionString: "postgres://postgres:Discovoador8@localhost:5432/cadastro"
 });
 
 pool.on('connect', () => {
@@ -22,16 +22,16 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-// Retorna todos os produtos
-app.get('/produtos', async (req, res) => {
-    const result = await pool.query("SELECT codigo, descricao, quantidade  FROM produtos")
+// Retorna todos os clientes
+app.get('/clientes', async (req, res) => {
+    const result = await pool.query("SELECT codigo, nome, login, email  FROM clientes")
     
     res.status(200).send(result.rows);
 })
 
 // Retorna o produto com o codigo
-app.get('/produtos/:codigo', async (req, res) => {
-    const result = await pool.query("SELECT codigo, descricao, quantidade FROM produtos WHERE codigo=$1",[req.params.codigo]);
+app.get('/clientes/:codigo', async (req, res) => {
+    const result = await pool.query("SELECT codigo, nome, login, email FROM clientes WHERE codigo=$1",[req.params.codigo]);
     if (result.rowCount == 0){
         res.statusCode = 404
         res.send("404")
@@ -39,9 +39,9 @@ app.get('/produtos/:codigo', async (req, res) => {
         res.status(200).send(result.rows);
 })
 
-//DELETA produtos com o codigo
-app.delete('/produtos/:codigo', async (req, res) => {
-    const result = await pool.query("DELETE FROM produtos WHERE codigo=$1",[req.params.codigo]);
+//DELETA clientes com o codigo
+app.delete('/clientes/:codigo', async (req, res) => {
+    const result = await pool.query("DELETE FROM clientes WHERE codigo=$1",[req.params.codigo]);
 
     if (result.rowCount == 0){
         res.statusCode = 404
@@ -53,24 +53,24 @@ app.delete('/produtos/:codigo', async (req, res) => {
 })
 
 // Atualiza um item do cadastro
-app.post('/produtos', async (req, res) => {
+app.post('/clientes', async (req, res) => {
     var newObj = req.body;
-    //var sameCodigo = listaProdutos.filter(x => x.codigo == newObj.codigo);
-    //insert into produtos(codigo,descricao,quantidade) values (4, 'teste', 2)
-    const sameCodigo = await pool.query("SELECT codigo FROM produtos WHERE codigo = $1",[newObj.codigo]);
+    //var sameCodigo = listaclientes.filter(x => x.codigo == newObj.codigo);
+    //insert into clientes(codigo,nome,login, email) values (4, 'teste', 2)
+    const sameCodigo = await pool.query("SELECT codigo FROM clientes WHERE codigo = $1",[newObj.codigo]);
     if (sameCodigo.rowCount > 0 ) {
             res.statusCode = 409;
             res.send("NOK");
     }else{
-        const result = await pool.query("INSERT INTO produtos (codigo, descricao, quantidade) VALUES($1,$2,$3)",
-        [newObj.codigo, newObj.descricao, newObj.quantidade]);
+        const result = await pool.query("INSERT INTO clientes (codigo, nome, login, email) VALUES($1,$2,$3,$4)",
+        [newObj.codigo, newObj.nome, newObj.login, newObj.email]);
         res.statusCode = 201;
         res.send(newObj);
     }
 })
 
-app.put('/produtos/:codigo', async (req, res) => {
-    const resource = await pool.query("SELECT codigo, descricao, quantidade FROM produtos WHERE codigo = $1", [req.params.codigo]);
+app.put('/clientes/:codigo', async (req, res) => {
+    const resource = await pool.query("SELECT codigo, nome, login, email FROM clientes WHERE codigo = $1", [req.params.codigo]);
     var newObj = req.body;
 
     if (resource.rowCount == 0) {
@@ -80,7 +80,7 @@ app.put('/produtos/:codigo', async (req, res) => {
     else {
         var elementoAtual = resource.rows[0]; 
         if (elementoAtual.codigo != newObj.codigo) {
-            var existsNew = await pool.query("SELECT codigo, descricao, quantidade FROM produtos WHERE codigo = $1", [newObj.codigo]);
+            var existsNew = await pool.query("SELECT codigo, nome, login, email FROM clientes WHERE codigo = $1", [newObj.codigo]);
             if (existsNew.rowCount > 0) {
                 res.statusCode = 409
                 res.send("NOK");
@@ -88,7 +88,7 @@ app.put('/produtos/:codigo', async (req, res) => {
             } 
         } 
 
-        const updated = await pool.query("UPDATE produtos SET codigo = $1, descricao = $2, quantidade = $3 WHERE codigo = $4 RETURNING *", [newObj.codigo, newObj.descricao, newObj.quantidade, req.params.codigo]);
+        const updated = await pool.query("UPDATE clientes SET codigo = $1, nome = $2, login = $3, email = $4 WHERE codigo = $5 RETURNING *", [newObj.codigo, newObj.nome, newObj.login, newObj.email, req.params.codigo]);
         res.send(updated.rows[0]);
     }
 })
