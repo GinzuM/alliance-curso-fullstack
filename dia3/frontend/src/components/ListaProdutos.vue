@@ -68,7 +68,8 @@ export default {
         },
         adicionarProduto: async function(novoProduto){
             await axios.post('http://localhost:3000/produtos', novoProduto)
-        
+            var response = await axios.get('http://localhost:3000/produtos')
+            this.produtos = response.data
         }
     },
 
