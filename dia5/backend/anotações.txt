@@ -1,0 +1,138 @@
+
+comandos do adm do server
+
+insert into produtos(codigo,descricao,quantidade) values (4, 'teste', 2)
+update produtos set descricao= 'nova descricao'
+select * from produtos                
+delete from produtos
+
+                    (filtros)      (adicionar elementos ao filtros)
+                        where codigo=3 and quantidade<10
+
+
+                    (ordem que a lista vai mostrar)    
+select from produtos order by 
+
+
+
+{"codigo": 6,"descricao": "teste 3","quantidade": 20}
+
+
+
+tipos primitivos
+integer, string, bool
+var i=10, nome = "diego"
+
+
+
+
+tipos de arrays(listas)
+var lista = ["banana", "maca", "amora"]
+
+
+
+tipos dicionario
+var usuario = {
+    codigo: 10,
+    nome: "diego,
+    email: "dyegro@gmail.com"
+}
+
+
+
+where codigo=$1 and nome=$2
+
+
+mudar arrays obj para valor
+var newObj = Object.values(req.body);
+
+
+
+
+{
+	"resource": "/c:/Users/rapha/curso alliance/alliance-curso-fullstack/dia3/frontend/src/App.vue",
+
+	"owner": "_generated_diagnostic_collection_name_#1",
+
+	"code": "1261",
+
+	"severity": 8,
+
+	"message": "rc/components/ListaProdutoAlready included file name 'c:/Users/rapha/curso alliance/alliance-curso-fullstack/dia3/frontend/ss.vue' differs from file name 'c:/Users/rapha/curso alliance/alliance-curso-fullstack/dia3/frontend/src/components/listaProdutos.vue' only in casing.\n  The file is in the program because:\n    Imported via './components/ListaProdutos.vue' from file 'c:/Users/rapha/curso alliance/alliance-curso-fullstack/dia3/frontend/src/App.vue'\n    Root file specified for compilation\n    Root file specified for compilation",
+	
+    
+    
+    
+    "source": "Vetur",
+
+	"startLineNumber": 9,
+
+	"startColumn": 27,
+
+	"endLineNumber": 9,
+
+	"endColumn": 59
+}
+
+
+
+
+
+
+
+
+    <b-form-group
+        id="input-group-1"
+        label="Email address:"
+        label-for="input-1"
+        description="We'll never share your email with anyone else."
+      >
+        <b-form-input
+          id="input-1"
+          v-model="form.email"
+          type="email"
+          placeholder="Enter email"
+          required
+        ></b-form-input>
+    </b-form-group>
+
+
+<b-modal id="teste" title="Inserir novo produto"
+                ok-variant='success' cancel-variant="danger"
+                ok-title='Sim' cancel-title="Não"
+            >
+                <p> Insira os dados de um novo produto</p>
+            </b-modal>
+
+
+
+
+<b-form-group id="fieldset-1" description="Digite o codigo do produto" label="Codigo"
+                label-for="input-1" :state="state">
+                    <b-form-input id="input-1" type="number" v-model="name" :state="state" trim></b-form-input>
+                </b-form-group>
+
+
+
+
+
+data() {
+      return {
+        text: ''
+      }
+    }
+
+
+
+
+
+    v-on:ok="objetoProduto(codigoNovo, descricaoNovo, quantidadeNovo)"
+
+
+
+
+     objetoProduto: function(x,y,z){
+            this.novoProduto.codigo = x
+            this.novoProduto.descricao = y
+            this.novoProduto.quantidade = z
+        },

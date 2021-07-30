@@ -1,0 +1,44 @@
+visualizar compras que fez no sistema
+registrar compras
+ver valor gasto
+
+
+tabela de movimentos -> todas as minhas compras
+ tabela de datas -> 
+
+ como armazenar valores não inteiros
+
+
+ if (resource.rowCount == 0) {
+      res.statusCode = 404
+      res.send("NOK"); 
+  }
+  else {
+      var elementoAtual = resource.rows[0]; 
+      if (elementoAtual.id != newObj.id) {
+          var existsNew = await pool.query("SELECT id, data_mov, descricao, categoria, valor FROM movimentos WHERE id = $1", [newObj.id]);
+          if (existsNew.rowCount > 0) {
+              res.statusCode = 409
+              res.send("NOK");
+              return;
+          } 
+      } 
+
+
+const resource = await pool.query("SELECT id, data_mov, descricao, categoria, valor FROM movimentos WHERE id = $1", [req.params.id]);
+
+
+
+
+
+cliente -> movimentos
+Cliente -> Movimento
+clientes -> movimentos
+Clientes -> Movimentos
+
+codigo -> id
+nome -> data_mov     -> nome: String, -> number
+login -> descricao
+email -> categoria
+valor
+

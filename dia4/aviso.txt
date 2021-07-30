@@ -1,1 +1,9 @@
-eu e o alex que trabalhamos muito pra fazer funcionar <3 :P
+visualizar compras que fez no sistema
+registrar compras
+ver valor gasto
+
+
+tabela de movimentos -> todas as minhas compras
+ tabela de datas -> 
+
+ como armazenar valores não inteiros
